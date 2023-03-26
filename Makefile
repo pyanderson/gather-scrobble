@@ -54,9 +54,6 @@ docs:
 	$(MAKE) -C docs html
 	open docs/_build/html/index.html
 
-protoc:
-	protoc --python_out=. --mypy_out=. ./gather_scrobble/events.proto
-
 release: clean
 	make dist
 	twine upload -r gather-scrobble dist/*
