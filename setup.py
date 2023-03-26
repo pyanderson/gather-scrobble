@@ -24,6 +24,7 @@ requirements = [
     "tabulate==0.9.0",
     "pylast==5.1.0",
     "spotipy==2.22.1",
+    "docopt==0.6.2",
 ]
 test_requirements = []
 
