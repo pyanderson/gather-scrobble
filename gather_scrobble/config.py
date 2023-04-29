@@ -1,13 +1,14 @@
 import os
 import platform
 from pathlib import Path
-from typing import Optional
+from typing import Optional, cast
 
 import keyring
 import pylast
 import spotipy
 from decouple import config
-from spotipy.oauth2 import SpotifyClientCredentials
+from spotipy.cache_handler import CacheFileHandler
+from spotipy.oauth2 import SpotifyOAuth
 
 CONFIG_FOLDER = "gather-scrobble"
 
@@ -52,30 +53,24 @@ class Credentials:
         return self.has_lastfm or self.has_spotify
 
 
+def _get_config_value(var_name: str) -> Optional[str]:
+    keyring_value = keyring.get_password("gather-scrobble", var_name)
+    env_var = config(var_name, default=None)
+    return keyring_value or cast(Optional[str], env_var)
+
+
 def get_credentials():
-    gather_api_key = keyring.get_password(
-        "gather-scrobble", "GATHER_API_KEY"
-    ) or config("GATHER_API_KEY", default=None)
+    gather_api_key = _get_config_value("GATHER_API_KEY")
     if gather_api_key is None or str(gather_api_key).strip() == "":
         raise Exception("Missing 'GATHER_API_KEY' value")
-    lastfm_api_key = keyring.get_password(
-        "gather-scrobble", "LASTFM_API_KEY"
-    ) or config("LASTFM_API_KEY", default=None)
-    lastfm_api_secret = keyring.get_password(
-        "gather-scrobble", "LASTFM_API_SECRET"
-    ) or config("LASTFM_API_SECRET", default=None)
-    lastfm_username = keyring.get_password(
-        "gather-scrobble", "LASTFM_USERNAME"
-    ) or config("LASTFM_USERNAME", default=None)
-    spotify_client_id = keyring.get_password(
-        "gather-scrobble", "SPOTIFY_CLIENT_ID"
-    ) or config("SPOTIFY_CLIENT_ID", default=None)
-    spotify_client_secret = keyring.get_password(
-        "gather-scrobble", "SPOTIFY_CLIENT_SECRET"
-    ) or config("SPOTIFY_CLIENT_SECRET", default=None)
-    spotify_client_redirect_uri = keyring.get_password(
-        "gather-scrobble", "SPOTIFY_CLIENT_REDIRECT_URI"
-    ) or config("SPOTIFY_CLIENT_REDIRECT_URI", default=None)
+    lastfm_api_key = _get_config_value("LASTFM_API_KEY")
+    lastfm_api_secret = _get_config_value("LASTFM_API_SECRET")
+    lastfm_username = _get_config_value("LASTFM_USERNAME")
+    spotify_client_id = _get_config_value("SPOTIFY_CLIENT_ID")
+    spotify_client_secret = _get_config_value("SPOTIFY_CLIENT_SECRET")
+    spotify_client_redirect_uri = _get_config_value(
+        "SPOTIFY_CLIENT_REDIRECT_URI"
+    )
     return Credentials(
         gather_api_key,
         lastfm_api_key,
@@ -129,22 +124,29 @@ def get_lastfm_client(credentials: Credentials):
     if not credentials.has_lastfm:
         raise Exception("last.fm not configured.")
     network = pylast.LastFMNetwork(
-        credentials.lastfm_api_key, credentials.lastfm_api_secret
+        cast(str, credentials.lastfm_api_key),
+        cast(str, credentials.lastfm_api_secret),
     )
     network.username = credentials.lastfm_username
     network.session_key = get_lastfm_session_key(network)
     return network.get_user(credentials.lastfm_username)
 
 
+class CustomCacheHandler(CacheFileHandler):
+    def __init__(self, cache_path=None, username=None):
+        custom_cache_path = Path(get_config_folder_path(), "spotify.cache")
+        super().__init__(custom_cache_path, username)
+
+
 def get_spotify_client(credentials: Credentials):
     if not credentials.has_spotify:
         raise Exception("Spotify not configured.")
-    from spotipy.oauth2 import SpotifyOAuth
 
     auth_manager = SpotifyOAuth(
         credentials.spotify_client_id,
         credentials.spotify_client_secret,
         credentials.spotify_client_redirect_uri,
         scope=["user-read-currently-playing", "user-read-playback-state"],
+        cache_handler=CustomCacheHandler(),
     )
     return spotipy.Spotify(auth_manager=auth_manager)
