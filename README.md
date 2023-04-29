@@ -175,7 +175,7 @@ $ gather-scrobble start "aAa0aAaAaaA0Aaaa/Name"
 ### Pull
 
 ```bash
-$ docker pull pyanderson/gather-scrobble:0.0.4
+$ docker pull pyanderson/gather-scrobble:0.0.5
 ```
 
 ### Docker Configuration
@@ -204,7 +204,7 @@ $ docker run -v /path/to/save/cache:/root/.config ...
 The docker container works as an executable, so you can use the same CLI command interface, for example, to test your configuration you can do this:
 
 ```bash
-$ docker run --env-file /path/to/myfile.env -v /path/to/save/cache:/root/.config -it pyanderson/gather-scrobble:0.0.4 test "aAa0aAaAaaA0Aaaa/Name"
+$ docker run --env-file /path/to/myfile.env -v /path/to/save/cache:/root/.config -it pyanderson/gather-scrobble:0.0.5 test "aAa0aAaAaaA0Aaaa/Name"
 Testing connection with Gather...
 Success
 Testing connection with last.fm...
@@ -227,7 +227,7 @@ Success
 To run gather-scrobble in background:
 
 ```bash
-$ docker run -d --restart=always --name gather-scrobble --env-file /path/to/myfile.env -v /path/to/save/cache:/root/.config pyanderson/gather-scrobble:0.0.4 test "aAa0aAaAaaA0Aaaa/Name"
+$ docker run -d --restart=always --name gather-scrobble --env-file /path/to/myfile.env -v /path/to/save/cache:/root/.config pyanderson/gather-scrobble:0.0.5 test "aAa0aAaAaaA0Aaaa/Name"
 cbe4b6c916d8e7977788462a447b8a6c9e526f46f5c9b85d7be5f843e7fd80dc
 ```
 
