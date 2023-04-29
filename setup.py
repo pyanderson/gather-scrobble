@@ -20,6 +20,7 @@ package = "gather_scrobble"
 requirements = [
     "gather-client-ws<1",
     "keyring==23.13.1",
+    "keyrings.cryptfile==1.3.9",
     "python-decouple==3.8",
     "tabulate==0.9.0",
     "pylast==5.1.0",
@@ -72,7 +73,7 @@ if sys.argv[-1] == "publish":
 setup(
     name="gather-scrobble",
     version=get_version(package),
-    description="Gather WebSocket service client",
+    description="Gather Scrobble - Scrobble your last.fm or Spotify activity to the Gather status.",
     long_description=readme,
     author=get_author(package),
     author_email=get_email(package),

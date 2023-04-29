@@ -3,6 +3,7 @@ from contextlib import suppress
 
 from docopt import docopt
 
+from gather_scrobble.config import logger
 from gather_scrobble.info import show_info
 from gather_scrobble.scrobble import start
 from gather_scrobble.test import test_configuration
@@ -43,6 +44,7 @@ def main():
                     arguments["--emojis"],
                 )
             )
+        logger.debug("bye")
         print("bye")
     if arguments["info"]:
         show_info()

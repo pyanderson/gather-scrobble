@@ -15,6 +15,7 @@ from gather_scrobble.config import (
     get_credentials,
     get_lastfm_client,
     get_spotify_client,
+    logger,
 )
 
 BARS = "𝄖𝄗𝄘𝄙𝄚𝄛"
@@ -97,6 +98,7 @@ async def clear_status(client):
 async def set_status(client, emoji: str, text: str):
     await client.set_emoji_status(emoji)
     await client.set_text_status(text)
+    logger.debug("%s - %s", emoji, text)
 
 
 async def scrobble(client, scrobble_client):
@@ -119,6 +121,7 @@ async def scrobble(client, scrobble_client):
     current_now_playing = None
     threading.Thread(target=show_now_playing, daemon=True).start()
     retry = 0
+    logger.debug("application started")
     while True:
         try:
             now_playing = scrobble_client.get_now_playing()
@@ -147,6 +150,7 @@ async def scrobble(client, scrobble_client):
 
 
 async def start(space_id, source, emojis):
+    logger.debug("loading credentials")
     credentials = get_credentials()
     if not credentials.is_valid:
         raise Exception("At least one source needs to be configured.")
@@ -154,4 +158,5 @@ async def start(space_id, source, emojis):
     client = GatherClient(
         credentials.gather_api_key, space_id, log_level=logging.ERROR
     )
+    logger.debug("starting application")
     await client.run(scrobble, scrobble_client)
