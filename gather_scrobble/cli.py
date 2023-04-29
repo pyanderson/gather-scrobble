@@ -10,7 +10,7 @@ from gather_scrobble.test import test_configuration
 
 
 def main():
-    """Gather Scrobble v0.0.5
+    """Gather Scrobble v0.0.6
     Usage:
         gather-scrobble start <space_id> [--source SOURCE] [--emojis EMOJIS]
         gather-scrobble info
@@ -32,7 +32,7 @@ def main():
                             empty string here. [default: 🎼🎵🎶🎧📻🎷🎸🎹]
 
     """
-    arguments = docopt(main.__doc__ or "", version="Gather Scrobble 0.0.5")
+    arguments = docopt(main.__doc__ or "", version="Gather Scrobble 0.0.6")
     if arguments["start"]:
         if arguments["--source"] not in ["lastfm", "spotify", "any"]:
             raise Exception(f"Invalid source: {arguments['--source']}")
