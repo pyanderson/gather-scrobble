@@ -133,10 +133,12 @@ async def scrobble(client, scrobble_client):
                 emoji = random.choice(scrobble_client.emojis)
                 current_now_playing = now_playing
                 await set_status(client, emoji, now_playing)
-                if emoji:
-                    q.put(f"{emoji} - {current_now_playing}")
-                else:
-                    q.put(f"{current_now_playing}")
+                # No show the playing now when running in docker to avoid messing with the logs.
+                if logger.level > logging.DEBUG:
+                    if emoji:
+                        q.put(f"{emoji} - {current_now_playing}")
+                    else:
+                        q.put(f"{current_now_playing}")
             await asyncio.sleep(15)
             retry = 0
         except KeyboardInterrupt:
