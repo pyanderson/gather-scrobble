@@ -224,17 +224,42 @@ Success
 ```
 
 #### Examples
-To run gather-scrobble in background:
+Validate your credentials:
 
 ```bash
-$ docker run -d --restart=always --name gather-scrobble --env-file /path/to/myfile.env -v /path/to/save/cache:/root/.config pyanderson/gather-scrobble:0.0.5 test "aAa0aAaAaaA0Aaaa/Name"
+$ docker run -it --rm --name gather-scrobble --env-file /path/to/myfile.env -v /path/to/save/cache:/root/.config pyanderson/gather-scrobble:0.0.5 test "aAa0aAaAaaA0Aaaa/Name"
+Testing connection with Gather...
+Success
+Testing connection with last.fm...
+Please authorize this script to access your account: https://www.last.fm/api/auth/?api_key=<api_key>
+Success
+Testing connection with Spotify...
+Go to the following URL: https://accounts.spotify.com/authorize?client_id=<client_id>&response_type=code&redirect_uri=http%3A%2F%2F127.0.0.1%3A9090&scope=user-read-currently-playing+user-read-playback-state
+Enter the URL you were redirected to: http://127.0.0.1:9090/?code=<code>
+Success
+
+┏━━━━━━━━━━━┳━━━━━━━━━━━━┓
+┃ Service   ┃ Working?   ┃
+┣━━━━━━━━━━━╋━━━━━━━━━━━━┫
+┃ Gather    ┃ True       ┃
+┣━━━━━━━━━━━╋━━━━━━━━━━━━┫
+┃ last.fm   ┃ True       ┃
+┣━━━━━━━━━━━╋━━━━━━━━━━━━┫
+┃ Spotify   ┃ True       ┃
+┗━━━━━━━━━━━┻━━━━━━━━━━━━┛
+```
+
+Run gather-scrobble in background:
+
+```bash
+$ docker run -d --restart=always --name gather-scrobble --env-file /path/to/myfile.env -v /path/to/save/cache:/root/.config pyanderson/gather-scrobble:0.0.5 start "aAa0aAaAaaA0Aaaa/Name"
 cbe4b6c916d8e7977788462a447b8a6c9e526f46f5c9b85d7be5f843e7fd80dc
 ```
 
 Check the logs:
 
 ```bash
-$ docker logs gather-scrobble
+$ docker logs -f gather-scrobble
 [2023-04-29 15:39:30,637][DEBUG] loading credentials
 [2023-04-29 15:39:31,427][DEBUG] starting application
 [2023-04-29 15:39:32,925][DEBUG] application started
