@@ -9,7 +9,6 @@ def show_info():
     print(
         tabulate(
             [
-                ["Gather", True],
                 ["last.fm", credentials.has_lastfm],
                 ["Spotify", credentials.has_spotify],
             ],

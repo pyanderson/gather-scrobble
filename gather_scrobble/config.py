@@ -17,9 +17,7 @@ config = AutoConfig(os.getcwd())  # search for settings in the current dir
 USE_CRYPTFILE = config("USE_CRYPTFILE", cast=bool, default=False)
 CONFIG_FOLDER = "gather-scrobble"
 
-logger = get_logger(
-    "gather-scrobble", logging.DEBUG if USE_CRYPTFILE else logging.INFO
-)
+logger = get_logger("gather-scrobble", logging.ERROR)
 
 
 class Credentials:

@@ -93,12 +93,13 @@ class ScrobbleClient:
 async def clear_status(client):
     await client.set_emoji_status("")
     await client.set_text_status("")
+    logger.debug("Status cleared")
 
 
 async def set_status(client, emoji: str, text: str):
     await client.set_emoji_status(emoji)
     await client.set_text_status(text)
-    logger.debug("%s - %s", emoji, text)
+    logger.debug(f"New Status: {emoji} - {text}")
 
 
 async def scrobble(client, scrobble_client):
@@ -124,7 +125,7 @@ async def scrobble(client, scrobble_client):
     current_now_playing = None
     threading.Thread(target=show_now_playing, daemon=True).start()
     retry = 0
-    logger.debug("application started")
+    logger.debug("Application started")
     while True:
         try:
             now_playing = scrobble_client.get_now_playing()
@@ -152,14 +153,14 @@ async def scrobble(client, scrobble_client):
             await asyncio.sleep(2)
 
 
-async def start(space_id, source, emojis):
-    logger.debug("loading credentials")
+async def start(space_id, source, emojis, log_level=logging.ERROR):
+    logger.debug("Loading credentials")
     credentials = get_credentials()
     if not credentials.is_valid:
         raise Exception("At least one source needs to be configured.")
     scrobble_client = ScrobbleClient(credentials, source, emojis)
     client = GatherClient(
-        credentials.gather_api_key, space_id, log_level=logging.ERROR
+        credentials.gather_api_key, space_id, log_level=log_level
     )
-    logger.debug("starting application")
+    logger.debug("Starting application")
     await client.run(scrobble, scrobble_client)

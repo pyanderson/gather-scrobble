@@ -1,4 +1,5 @@
 import asyncio
+import logging
 from contextlib import suppress
 
 from docopt import docopt
@@ -12,9 +13,9 @@ from gather_scrobble.test import test_configuration
 def main():
     """Gather Scrobble v0.0.7
     Usage:
-        gather-scrobble start <space_id> [--source SOURCE] [--emojis EMOJIS]
+        gather-scrobble start <space_id> [--source SOURCE] [--emojis EMOJIS] [--verbose]
         gather-scrobble info
-        gather-scrobble test <space_id>
+        gather-scrobble test <space_id> [--verbose]
 
     Arguments:
         <space_id>          Gather space id.
@@ -30,9 +31,14 @@ def main():
                             the list of emojis that will be chosen randomly,
                             and also you don't like emojis, you can set an
                             empty string here. [default: 🎼🎵🎶🎧📻🎷🎸🎹]
+        -v --verbose        Enable verbose logging.
 
     """
     arguments = docopt(main.__doc__ or "", version="Gather Scrobble 0.0.7")
+    log_level = logging.DEBUG if arguments.get("--verbose") else logging.ERROR
+    logger.setLevel(log_level)
+    for handler in logger.handlers:
+        handler.setLevel(log_level)
     if arguments["start"]:
         if arguments["--source"] not in ["lastfm", "spotify", "any"]:
             raise Exception(f"Invalid source: {arguments['--source']}")
@@ -42,11 +48,11 @@ def main():
                     arguments["<space_id>"],
                     arguments["--source"],
                     arguments["--emojis"],
+                    log_level,
                 )
             )
-        logger.debug("bye")
         print("bye")
     if arguments["info"]:
         show_info()
     if arguments["test"]:
-        test_configuration(arguments["<space_id>"])
+        test_configuration(arguments["<space_id>"], log_level)
