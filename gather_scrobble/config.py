@@ -14,7 +14,7 @@ from spotipy.oauth2 import SpotifyOAuth
 from gather_scrobble.utils import get_logger
 
 config = AutoConfig(os.getcwd())  # search for settings in the current dir
-USE_CRYPTFILE = config("USE_CRYPTFILE", cast=bool, default=False)
+KEYRING_CRYPTFILE_PASSWORD = config("KEYRING_CRYPTFILE_PASSWORD", default="")
 CONFIG_FOLDER = "gather-scrobble"
 
 logger = get_logger("gather-scrobble", logging.ERROR)
@@ -67,11 +67,11 @@ def _get_config_value(var_name: str) -> Optional[str]:
 
 
 def get_credentials():
-    if USE_CRYPTFILE:
+    if KEYRING_CRYPTFILE_PASSWORD:
         from keyrings.cryptfile.cryptfile import CryptFileKeyring
 
         kr = CryptFileKeyring()
-        kr.keyring_key = config("KEYRING_CRYPTFILE_PASSWORD", default="secret")
+        kr.keyring_key = KEYRING_CRYPTFILE_PASSWORD
         keyring.set_keyring(kr)
     gather_api_key = _get_config_value("GATHER_API_KEY")
     if gather_api_key is None or str(gather_api_key).strip() == "":
@@ -161,6 +161,6 @@ def get_spotify_client(credentials: Credentials):
         credentials.spotify_client_redirect_uri,
         scope=["user-read-currently-playing", "user-read-playback-state"],
         cache_handler=CustomCacheHandler(),
-        open_browser=not USE_CRYPTFILE,
+        open_browser=not KEYRING_CRYPTFILE_PASSWORD,
     )
     return spotipy.Spotify(auth_manager=auth_manager)
