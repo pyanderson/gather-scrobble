@@ -11,7 +11,7 @@ from gather_scrobble.test import test_configuration
 
 
 def main():
-    """Gather Scrobble v0.1.0
+    """Gather Scrobble v0.1.1
     Usage:
         gather-scrobble start <space_id> [--source SOURCE] [--emojis EMOJIS] [--verbose]
         gather-scrobble info
@@ -34,7 +34,7 @@ def main():
         -v --verbose        Enable verbose logging.
 
     """
-    arguments = docopt(main.__doc__ or "", version="Gather Scrobble 0.1.0")
+    arguments = docopt(main.__doc__ or "", version="Gather Scrobble 0.1.1")
     log_level = logging.DEBUG if arguments.get("--verbose") else logging.ERROR
     logger.setLevel(log_level)
     for handler in logger.handlers:
