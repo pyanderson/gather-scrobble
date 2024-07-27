@@ -321,13 +321,15 @@ gather-scrobble
 
 Thanks to @chocoelho for the docker compose example.
 
+This example expects you to have a `.env` file with an additional env var `GATHER_SPACE_ID`.
+
 compose.yaml:
 
 ```yaml
 services:
   main:
     image: "pyanderson/gather-scrobble:0.1.1"
-    command: start $${GATHER_SPACE_ID} -v
+    command: start ${GATHER_SPACE_ID} -v
     restart: always
     env_file:
       - .env
@@ -335,7 +337,7 @@ services:
       - .cache:/root/.config/gather-scrobble
 ```
 
-Validate the credentials:
+Before running, validate the credentials:
 
 ```bash
 docker compose run --rm main test "aAa0aAaAaaA0Aaaa/Name"
@@ -344,7 +346,7 @@ docker compose run --rm main test "aAa0aAaAaaA0Aaaa/Name"
 Run in the detached mode:
 
 ```bash
-docker compose up -d service
+docker compose up -d
 ```
 
 Logs:
