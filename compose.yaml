@@ -1,0 +1,9 @@
+services:
+  main:
+    image: "pyanderson/gather-scrobble:0.1.0"
+    command: start $${GATHER_SPACE_ID} -v
+    restart: always
+    env_file:
+      - .env
+    volumes:
+      - .cache:/root/.config/gather-scrobble

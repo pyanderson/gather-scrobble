@@ -102,7 +102,7 @@ SPOTIFY_CLIENT_REDIRECT_URI=<SPOTIFY_CLIENT_REDIRECT_URI>
 #### Help
 
 ```bash
-$ gather-scrobble --help
+gather-scrobble --help
 Gather Scrobble v0.1.0
     Usage:
         gather-scrobble start <space_id> [--source SOURCE] [--emojis EMOJIS]
@@ -133,7 +133,7 @@ Gather Scrobble v0.1.0
 Before starting, check if you have configured the services:
 
 ```bash
-$ gather-scrobble info
+gather-scrobble info
 Gather Scrobble
 ┏━━━━━━━━━━━┳━━━━━━━━━━━━━━┓
 ┃ Service   ┃ Configured   ┃
@@ -151,7 +151,7 @@ Gather Scrobble
 And test your configuration:
 
 ```bash
-$ gather-scrobble test "aAa0aAaAaaA0Aaaa/Name"
+gather-scrobble test "aAa0aAaAaaA0Aaaa/Name"
 Testing connection with Gather...
 Success
 Testing connection with last.fm...
@@ -175,7 +175,7 @@ Success
 The first time you scrobble for any of the sources, the user will be asked to authorize your application to access data from the respective scrobble sources.
 
 ```bash
-$ gather-scrobble start "aAa0aAaAaaA0Aaaa/Name"
+gather-scrobble start "aAa0aAaAaaA0Aaaa/Name"
 🎸 - Evil Papagali - Massacration 𝄛𝄙𝄘𝄛𝄙
 ```
 
@@ -213,7 +213,7 @@ events {
 ### Pull
 
 ```bash
-$ docker pull pyanderson/gather-scrobble:0.1.0
+docker pull pyanderson/gather-scrobble:0.1.0
 ```
 
 ### Docker Configuration
@@ -223,7 +223,7 @@ $ docker pull pyanderson/gather-scrobble:0.1.0
 The most common way to manage credentials in docker containers is through environment variables, but in this case, you can still use [keyring](https://github.com/jaraco/keyring), through the third-party [keyrings.cryptfile](https://github.com/frispete/keyrings.cryptfile), you will need to create a file with your credentials, mount a volume with the file in the path `/root/.local/share/python_keyring/cryptfile_pass.cfg` and set the `KEYRING_CRYPTFILE_PASSWORD` environment variable with the password that you used to create the file:
 
 ```bash
-$ docker run -v $(echo $HOME)/.local/share/python_keyring/cryptfile_pass.csg:/root/.local/share/python_keyring/cryptfile_pass.cfg -e KEYRING_CRYPTFILE_PASSWORD=secret_password ...
+docker run -v $(echo $HOME)/.local/share/python_keyring/cryptfile_pass.csg:/root/.local/share/python_keyring/cryptfile_pass.cfg -e KEYRING_CRYPTFILE_PASSWORD=secret_password ...
 ```
 
 #### Env File
@@ -231,7 +231,7 @@ $ docker run -v $(echo $HOME)/.local/share/python_keyring/cryptfile_pass.csg:/ro
 Add your credentials to a .env file and use it with the --env-file option:
 
 ```bash
-$ docker run --env-file /path/to/myfile.env ...
+docker run --env-file /path/to/myfile.env ...
 ```
 
 #### Cache
@@ -239,7 +239,7 @@ $ docker run --env-file /path/to/myfile.env ...
 To avoid being asked to authorize the last.fm/Spotify application in every usage, you should mount a volume to save the gather-scrobble cache folder:
 
 ```bash
-$ docker run -v /path/to/the/host/cache/folder:/root/.config
+docker run -v /path/to/the/host/cache/folder:/root/.config
 ```
 
 ### Docker Usage
@@ -247,7 +247,7 @@ $ docker run -v /path/to/the/host/cache/folder:/root/.config
 The docker container works as an executable, so you can use the same CLI command interface, for example, to test your configuration you can do this:
 
 ```bash
-$ docker run --env-file /path/to/myfile.env -v /path/to/the/host/cache/folder:/root/.config -it pyanderson/gather-scrobble:0.1.0 test "aAa0aAaAaaA0Aaaa/Name"
+docker run --env-file /path/to/myfile.env -v /path/to/the/host/cache/folder:/root/.config -it pyanderson/gather-scrobble:0.1.0 test "aAa0aAaAaaA0Aaaa/Name"
 Testing connection with Gather...
 Success
 Testing connection with last.fm...
@@ -271,7 +271,7 @@ Success
 Validate your credentials:
 
 ```bash
-$ docker run -it --rm --name gather-scrobble --env-file /path/to/myfile.env -v /path/to/the/host/cache/folder:/root/.config pyanderson/gather-scrobble:0.1.0 test "aAa0aAaAaaA0Aaaa/Name"
+docker run -it --rm --name gather-scrobble --env-file /path/to/myfile.env -v /path/to/the/host/cache/folder:/root/.config pyanderson/gather-scrobble:0.1.0 test "aAa0aAaAaaA0Aaaa/Name"
 Testing connection with Gather...
 Success
 Testing connection with last.fm...
@@ -296,14 +296,14 @@ Success
 Run gather-scrobble in background:
 
 ```bash
-$ docker run -d --restart=always --name gather-scrobble --env-file /path/to/myfile.env -v /path/to/the/host/cache/folder:/root/.config pyanderson/gather-scrobble:0.1.0 start "aAa0aAaAaaA0Aaaa/Name"
+docker run -d --restart=always --name gather-scrobble --env-file /path/to/myfile.env -v /path/to/the/host/cache/folder:/root/.config pyanderson/gather-scrobble:0.1.0 start "aAa0aAaAaaA0Aaaa/Name"
 cbe4b6c916d8e7977788462a447b8a6c9e526f46f5c9b85d7be5f843e7fd80dc
 ```
 
 Check the logs:
 
 ```bash
-$ docker logs -f gather-scrobble
+docker logs -f gather-scrobble
 [2023-04-29 15:39:30,637][DEBUG] loading credentials
 [2023-04-29 15:39:31,427][DEBUG] starting application
 [2023-04-29 15:39:32,925][DEBUG] application started
@@ -313,7 +313,7 @@ $ docker logs -f gather-scrobble
 Stop:
 
 ```bash
-$ docker rm -r gather-scrobble
+docker rm -r gather-scrobble
 gather-scrobble
 ```
 
@@ -321,15 +321,13 @@ gather-scrobble
 
 Thanks to @chocoelho for the docker compose example.
 
-docker-compose.yaml:
+compose.yaml:
 
 ```yaml
-version: "3.9"
-
 services:
-  service:
+  main:
     image: "pyanderson/gather-scrobble:0.1.0"
-    command: start "aAa0aAaAaaA0Aaaa/Name"
+    command: start $${GATHER_SPACE_ID} -v
     restart: always
     env_file:
       - .env
@@ -340,19 +338,19 @@ services:
 Validate the credentials:
 
 ```bash
-$ docker compose run --rm service test "aAa0aAaAaaA0Aaaa/Name"
+docker compose run --rm main test "aAa0aAaAaaA0Aaaa/Name"
 ```
 
 Run in the detached mode:
 
 ```bash
-$ docker compose up -d service
+docker compose up -d service
 ```
 
 Logs:
 
 ```bash
-$ docker compose logs service
+docker compose logs service
 ```
 
 ### FAQ
